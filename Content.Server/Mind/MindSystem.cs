@@ -71,14 +71,15 @@ using Content.Goobstation.Shared.Mind.Components;
 using Content.Server.Administration.Logs;
 using Content.Server.GameTicking;
 using Content.Server.Ghost;
-using Content.Server.Mind.Commands;
 using Content.Shared._Goobstation.Wizard.BindSoul;
 using Content.Shared.Database;
 using Content.Shared.Ghost;
+using Content.Shared.Humanoid;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Players;
+using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Tag;
 using Robust.Server.GameStates;
 using Robust.Server.Player;
@@ -341,6 +342,15 @@ public sealed class MindSystem : SharedMindSystem
             component!.Mind = mindId;
             mind.OwnedEntity = entity;
             mind.OriginalOwnedEntity ??= GetNetEntity(mind.OwnedEntity);
+
+            // Orion-Start
+            if (mind.FirstRoundParticipationTime == null
+                && (HasComp<HumanoidAppearanceComponent>(entity.Value)
+                    || HasComp<BorgBrainComponent>(entity.Value)
+                    || HasComp<BorgChassisComponent>(entity.Value)))
+                mind.FirstRoundParticipationTime = _gameTicker.RoundDuration();
+            // Orion-End
+
             Entity<MindComponent> mindEnt = (mindId, mind);
             Entity<MindContainerComponent> containerEnt = (entity.Value, component);
             RaiseLocalEvent(entity.Value, new MindAddedMessage(mindEnt, containerEnt));
@@ -435,7 +445,7 @@ public sealed class MindSystem : SharedMindSystem
             _tag.AddTag(mind.OwnedEntity.Value, SharedBindSoulSystem.IgnoreBindSoulTag);
         _tag.AddTag(target, SharedBindSoulSystem.IgnoreBindSoulTag); // Goobstation
 
-        MakeSentientCommand.MakeSentient(target, EntityManager);
+        MakeSentient(target);
         TransferTo(mindId, target, ghostCheckOverride: true, mind: mind);
 
         if (mind.OwnedEntity != null) // Goobstation

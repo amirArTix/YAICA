@@ -246,12 +246,6 @@ public sealed partial class GoobCVars
         CVarDef.Create("silicon.npcupdatetime", 1.5f, CVar.SERVERONLY);
 
     /// <summary>
-    ///     Should the player automatically get up after being knocked down
-    /// </summary>
-    public static readonly CVarDef<bool> AutoGetUp =
-        CVarDef.Create("white.auto_get_up", true, CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED); // WD EDIT
-
-    /// <summary>
     ///     Sets the size of the hitbox where projectile/laser will hit any entity regardless of crawling
     /// </summary>
     public static readonly CVarDef<float> CrawlHitzoneSize =
@@ -330,6 +324,15 @@ public sealed partial class GoobCVars
 
     public static readonly CVarDef<int> GoobcoinShortRoundPenaltyTargetMinutes =
         CVarDef.Create("servercurrency.shortround_penalty_target_minutes", 90, CVar.SERVERONLY);
+
+    // Orion-Start
+    /// <summary>
+    ///     How much time need to spend in the round before receiving the currency for participating in the round
+    ///     It is necessary to close the hole of receiving currency!
+    /// </summary>
+    public static readonly CVarDef<int> GoobcoinMinimumRoundMinutesForPayout =
+        CVarDef.Create("servercurrency.min_round_minutes_for_payout", 15, CVar.SERVERONLY);
+    // Orion-End
 
     #endregion
 
